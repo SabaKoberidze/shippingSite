@@ -3,5 +3,5 @@
 </script>
 
 <template>
-    <div>home</div>
+    <filterComponent></filterComponent>
 </template>
