@@ -3,8 +3,15 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
   css: ['@/assets/styles/main.scss'],
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', "@nuxtjs/supabase"],
   pinia: {
     storesDirs: ['./stores'],
+  },
+  supabase: {
+    redirectOptions: {
+      login: "/login",
+      callback: "/profile",
+      exclude: ["/"],
+    },
   },
 })

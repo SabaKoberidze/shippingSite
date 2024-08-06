@@ -1,7 +1,7 @@
 <template>
     <header>
         <div id="siteInfo">
-            <div id="logo">LOGO</div>
+            <div id="logo" @click="navigateTo('/')">LOGO</div>
             <div id="searchContainer">
                 <div id="searchIcon">
                 </div>
@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </div>
-            <div id="userPorfile"></div>
+            <div id="userPorfile" @click="navigateTo('/profile')"></div>
         </div>
     </header>
 </template>

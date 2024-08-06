@@ -1,7 +1,13 @@
-<script setup lang="ts">
+<template>
+    <div>
+        PROFILE
+    </div>
+</template>
 
+<script lang="ts" setup>
+definePageMeta({
+    middleware: ['auth']
+})
 </script>
 
-<template>
-    <div>profile</div>
-</template>
+<style lang="scss"></style>
