@@ -53,6 +53,11 @@ const signUp = async () => {
         console.log('error', error)
     }
 }
+const googeSignin = async () => {
+    const { data, error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+    })
+}
 const login = async () => {
     const { data, error } = await client.auth.signInWithPassword({
         email: email.value,
