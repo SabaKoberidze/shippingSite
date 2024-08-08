@@ -2,7 +2,7 @@
     <header>
         <div id="siteInfo">
             <div id="logo" @click="navigateTo('/')">LOGO</div>
-            <div id="searchContainer">
+            <div id="searchContainer" v-show="route.name !== 'profile'">
                 <div id="searchIcon">
                 </div>
                 <input placeholder="ძებნა">
@@ -27,7 +27,13 @@
                     </div>
                 </div>
             </div>
-            <div id="userPorfile" @click="navigateTo('/profile')"></div>
+            <div id="userPorfile" @click="profileIsShown = !profileIsShown" :class="{ active: profileIsShown }"
+                ref="profileButton">
+                <div v-show="profileIsShown">
+                    <p @click="navigateTo('/profile')">Profile</p>
+                    <p @click="logout()" v-if="user">Logout</p>
+                </div>
+            </div>
         </div>
     </header>
 </template>
@@ -36,7 +42,13 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 const langCur = useLangCurrencyStore();
 const langCurrencyPickerVisible = ref(false);
+const profileIsShown = ref(false)
 const siteConfigs = ref<HTMLElement | null>(null);
+const profileButton = ref<HTMLElement | null>(null);
+const client = useSupabaseClient()
+const user = useSupabaseUser()
+const route = useRoute()
+
 
 const toggleLangCurrencyPicker = () => {
     langCurrencyPickerVisible.value = !langCurrencyPickerVisible.value;
@@ -46,7 +58,15 @@ const handleClickOutside = (event: MouseEvent) => {
     if (siteConfigs.value && !siteConfigs.value?.contains(event.target as Node)) {
         langCurrencyPickerVisible.value = false;
     }
+    if (profileButton.value && !profileButton.value?.contains(event.target as Node)) {
+        profileIsShown.value = false;
+    }
 };
+const logout = async () => {
+    const { error } = await client.auth.signOut()
+    navigateTo('/')
+    console.log('error', error)
+}
 
 onMounted(() => {
     document.addEventListener('click', handleClickOutside);
@@ -78,6 +98,7 @@ header {
             display: flex;
             justify-content: center;
             align-items: center;
+            cursor: pointer;
         }
 
         #searchContainer {
@@ -126,11 +147,11 @@ header {
             align-items: center;
             height: 60%;
             min-width: 150px;
-            border-right: solid 1px rgba(0, 0, 0, 0.357);
             position: relative;
             border-radius: 25px;
             transition: 200ms;
             user-select: none;
+
 
             div {
                 height: 100%;
@@ -153,8 +174,7 @@ header {
                 min-width: 250px;
                 height: max-content;
                 top: 100%;
-                border: 1px solid rgba(0, 0, 0, 0.357);
-                right: -1px;
+                right: 0;
                 padding: 0;
                 background-color: rgba(255, 255, 255, 0.903);
                 border-radius: 25px 0 25px 25px;
@@ -172,7 +192,7 @@ header {
                     border: 0;
                     padding: 0;
                     border-right: 1px solid rgba(0, 0, 0, 0.357);
-                    border-radius: 20px 0 0 20px;
+                    border-radius: 25px 0 0 20px;
                     overflow: hidden;
                     transition: 200ms;
 
@@ -229,6 +249,37 @@ header {
             background-position: center;
             background-size: cover;
             cursor: pointer;
+            position: relative;
+            transition: 200ms;
+
+            &.active {
+                border-radius: 25px 25px 0 0;
+            }
+
+            div {
+                z-index: 5;
+                position: absolute;
+                width: 100px;
+                background-color: white;
+                top: 100%;
+                right: 0;
+                border-radius: 25px 0 25px 0;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+
+                p {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 30px;
+                    transition: 200ms;
+
+                    &:hover {
+                        background-color: rgb(210, 245, 253);
+                    }
+                }
+            }
         }
 
     }

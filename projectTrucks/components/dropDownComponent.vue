@@ -54,6 +54,10 @@ const toggleDropdown = async () => {
     if (!hasBeenOpen.value) hasBeenOpen.value = true;
 };
 
+const clearOption = () => {
+    selectedOption.value = ''
+}
+
 const closeDropdown = () => {
     isOpen.value = false;
     searchQuery.value = '';

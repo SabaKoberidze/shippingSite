@@ -8,23 +8,30 @@
             </div>
             <div class="filterDropdowns">
                 <div class="filterComponent">
-                    <dropDownComponent :options="['ერთი', 'ორი', 'სამი']" :dropdown-name="'პირველი'" />
+                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
+                        :dropdown-name="'პირველი'" />
                 </div>
                 <div class="filterComponent">
-                    <dropDownComponent :options="['ერთი', 'ორი', 'სამი']" :dropdown-name="'მეორე'" />
+                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
+                        :dropdown-name="'მეორე'" />
                 </div>
                 <div class="filterComponent">
-                    <dropDownComponent :options="['ერთი', 'ორი', 'სამი']" :dropdown-name="'მესამე'" />
+                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
+                        :dropdown-name="'მესამე'" />
                 </div>
                 <div class="filterComponent">
-                    <dropDownComponent :options="['ერთი', 'ორი', 'სამი']" :dropdown-name="'მეოთხე'" />
+                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
+                        :dropdown-name="'მეოთხე'" />
                 </div>
                 <div class="filterComponent">
-                    <dropDownComponent :options="['ერთი', 'ორი', 'სამი']" :dropdown-name="'მეხუთე'" />
+                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
+                        :dropdown-name="'მეხუთე'" />
                 </div>
                 <div class="filterComponent">
-                    <dropDownComponent :options="['ერთი', 'ორი', 'სამი']" :dropdown-name="'მეექვსე'" />
+                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
+                        :dropdown-name="'მეექვსე'" />
                 </div>
+
             </div>
 
         </div>
@@ -32,8 +39,12 @@
     </div>
 </template>
 <script lang="ts" setup>
+const filterDropdown = ref(null)
+
+const clearFilter = () => {
 
 
+}
 </script>
 <style lang="scss" scoped>
 #filterContainer {

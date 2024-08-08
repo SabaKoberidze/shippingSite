@@ -17,7 +17,8 @@
     "vue": "latest"
   },
   "overrides": {
-    "vue": "latest"
+    "vue": "latest",
+    "@supabase/gotrue-js": "2.16.0"
   },
   "devDependencies": {
     "sass": "^1.77.8"
