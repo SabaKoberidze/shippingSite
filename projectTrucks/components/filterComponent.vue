@@ -2,49 +2,37 @@
     <div id="filterContainer">
         <div id="filter">
             <div class="filterConfigs">
-                <div id="clearFilter">
+                <div id="clearFilter" @click="clearFilter">
                     ფილტრის გასუფთავება
                 </div>
             </div>
             <div class="filterDropdowns">
-                <div class="filterComponent">
-                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
-                        :dropdown-name="'პირველი'" />
+                <div class="filterComponent" v-for="(option, index) in dropdownOptions" :key="index">
+                    <dropDownComponent ref="dropdownRef" :options="option.options" :dropdown-name="option.name" />
                 </div>
-                <div class="filterComponent">
-                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
-                        :dropdown-name="'მეორე'" />
-                </div>
-                <div class="filterComponent">
-                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
-                        :dropdown-name="'მესამე'" />
-                </div>
-                <div class="filterComponent">
-                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
-                        :dropdown-name="'მეოთხე'" />
-                </div>
-                <div class="filterComponent">
-                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
-                        :dropdown-name="'მეხუთე'" />
-                </div>
-                <div class="filterComponent">
-                    <dropDownComponent ref="filterDropdown" :options="['ერთი', 'ორი', 'სამი']"
-                        :dropdown-name="'მეექვსე'" />
-                </div>
-
             </div>
-
         </div>
         <div class="search">ძებნა</div>
     </div>
 </template>
 <script lang="ts" setup>
-const filterDropdown = ref(null)
+import { ref } from 'vue';
+
+const dropdownOptions = [
+    { name: 'პირველი', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მეორე', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მესამე', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მეოთხე', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მეხუთე', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მეექვსე', options: ['ერთი', 'ორი', 'სამი'] },
+];
+const dropdownRef = ref([]);
 
 const clearFilter = () => {
-
-
-}
+    dropdownRef.value.forEach((dropdown: any) => {
+        dropdown.clearSelection()
+    })
+};
 </script>
 <style lang="scss" scoped>
 #filterContainer {

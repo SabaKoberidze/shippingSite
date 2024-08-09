@@ -2,7 +2,7 @@
     <div class="dropdown">
         <span v-if="selectedOption" class="clear-button" @click.stop="clearSelection">✖</span>
         <span v-else class="arrow" :class="{ 'arrow-open': isOpen, 'arrow-close': !isOpen }"></span>
-        <button v-if="!isOpen" class="dropdown-button" @click="toggleDropdown">
+        <button v-if="!isOpen" class="dropdown-button" @click="toggleDropdown" :class="{ selected: selectedOption }">
             {{ selectedOption || dropdownName }}
         </button>
         <div v-else class="dropdown-input-wrapper">
@@ -69,10 +69,6 @@ const selectOption = (option: string) => {
     searchQuery.value = '';
 };
 
-const clearSelection = () => {
-    selectedOption.value = '';
-    isOpen.value = false;
-};
 
 const filteredOptions = computed(() => {
     if (!searchQuery.value) return props.options;
@@ -84,6 +80,12 @@ const filteredOptions = computed(() => {
 const filterOptions = () => {
     if (!isOpen.value) isOpen.value = true;
 }
+
+const clearSelection = () => {
+    selectedOption.value = '';
+    isOpen.value = false;
+};
+defineExpose({ clearSelection })
 </script>
 
 <style lang="scss" scoped>
@@ -107,6 +109,9 @@ const filterOptions = () => {
     height: 40px;
     border: 0;
 
+    &.selected {
+        background-color: rgb(143, 143, 143);
+    }
 
 
 }
