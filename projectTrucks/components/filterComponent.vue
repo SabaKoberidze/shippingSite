@@ -25,6 +25,8 @@ const dropdownOptions = [
     { name: 'მეოთხე', options: ['ერთი', 'ორი', 'სამი'] },
     { name: 'მეხუთე', options: ['ერთი', 'ორი', 'სამი'] },
     { name: 'მეექვსე', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მეშვიდე', options: ['ერთი', 'ორი', 'სამი'] },
+    { name: 'მერვე', options: ['ერთი', 'ორი', 'სამი'] },
 ];
 const dropdownRef = ref([]);
 

@@ -3,17 +3,19 @@
 
         <div id="loginPage">
             <form @submit.prevent="() => (isSignUp ? signUp() : login())">
-                <div>
-                    <label for="Email">Email</label>
-                    <input id="Email" type="text" v-model="email">
-                </div>
-                <div>
-                    <label for="password">Password</label>
-                    <input id="password" type="password" v-model="password">
-                </div>
-                <div v-if="isSignUp">
-                    <label for="newPassword">New password</label>
-                    <input id="newPassword" type="password" v-model="newPassword">
+                <div id="inputsContaiener">
+                    <div>
+                        <label for="Email">Email</label>
+                        <input id="Email" type="text" v-model="email">
+                    </div>
+                    <div>
+                        <label for="password">Password</label>
+                        <input id="password" type="password" v-model="password">
+                    </div>
+                    <div v-if="isSignUp">
+                        <label for="newPassword">New password</label>
+                        <input id="newPassword" type="password" v-model="newPassword">
+                    </div>
                 </div>
                 <button type="submit" value="Submit">
                     <span v-if="isSignUp"> Sign up </span>
@@ -82,59 +84,98 @@ const login = async () => {
     align-items: center;
 
     #loginPage {
-        width: 300px;
-        height: 300px;
-        background-color: rgb(255, 255, 255);
-        box-shadow: 0px 0px 20px rgba(84, 211, 211, 0.801);
+        width: 400px;
+        height: 400px;
+        background-color: rgba(60, 190, 255, 0.067);
+        border: 1px solid rgba(158, 197, 197, 0.645);
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: flex-end;
+        align-items: center;
         padding: 20px;
         border-radius: 15px;
 
         form {
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
             align-items: center;
-            gap: 10px;
-            height: 100%;
+            gap: 50px;
+            width: 100%;
+            height: 300px;
 
-            div {
+            #inputsContaiener {
                 display: flex;
                 flex-direction: column;
-                gap: 5px;
+                justify-content: center;
+                align-items: center;
+                gap: 30px;
+                height: 60%;
+                width: 100%;
 
-                input {
-                    width: 100%;
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: start;
+                    gap: 7px;
+                    width: 80%;
+
+                    input {
+                        width: 100%;
+                        outline: 0;
+                        border: 0;
+                        height: 30px;
+                        padding: 5px;
+                        border-radius: 5px;
+                        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.363);
+                    }
+
+                    label {
+                        font-weight: bold;
+                        color: rgb(159, 194, 218);
+                    }
                 }
             }
 
+
             button {
-                min-width: 60px;
-                width: min-content;
-                height: 30px;
+                width: 120px;
+                height: 35px;
                 border: 0;
-                cursor: pointer
+                cursor: pointer;
+                border-radius: 25px;
+                background-color: rgb(161, 70, 54);
+                font-weight: bold;
+                box-shadow: 0px 5px 1px rgb(123, 53, 41);
+                transition: 200ms;
+                color: white;
+                text-shadow: 0px 1px 2px rgba(67, 51, 51, 0.353);
+
+                &:active {
+                    transform: translateY(5px);
+                    box-shadow: 0 0 0 rgb(123, 53, 41);
+                }
             }
         }
     }
 
     #loginButtonContainer {
-        width: 100%;
-        height: 25px;
+        width: 80%;
+        height: 30px;
         display: flex;
         justify-content: center;
 
         button {
+
             border-radius: 30px;
             border: 0;
-            height: 25px;
+            height: 30px;
             width: 85%;
-            background-color: rgba(143, 209, 230, 0.541);
+            background-color: rgba(115, 166, 182, 0.541);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.422);
             cursor: pointer;
 
             span {
+                color: white;
                 width: 100%;
             }
 

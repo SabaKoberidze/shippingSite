@@ -3,7 +3,8 @@
         <span v-if="selectedOption" class="clear-button" @click.stop="clearSelection">✖</span>
         <span v-else class="arrow" :class="{ 'arrow-open': isOpen, 'arrow-close': !isOpen }"></span>
         <button v-if="!isOpen" class="dropdown-button" @click="toggleDropdown" :class="{ selected: selectedOption }">
-            {{ selectedOption || dropdownName }}
+            <p class="dropdown-name" v-if="selectedOption">{{ dropdownName }}</p>
+            <p>{{ selectedOption || dropdownName }}</p>
         </button>
         <div v-else class="dropdown-input-wrapper">
             <input type="text" v-model="searchQuery" :placeholder="selectedOption || dropdownName"
@@ -104,16 +105,21 @@ defineExpose({ clearSelection })
     cursor: pointer;
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
+    align-items: start;
+    flex-direction: column;
     height: 40px;
     border: 0;
+    transition: 200ms;
 
     &.selected {
         background-color: rgb(143, 143, 143);
     }
 
-
+    .dropdown-name {
+        font-size: 11px;
+        opacity: 0.6;
+    }
 }
 
 .arrow {
@@ -130,6 +136,10 @@ defineExpose({ clearSelection })
     top: 40%;
     z-index: 3;
 
+    &-close {
+        pointer-events: none;
+    }
+
     &-open {
         transform: rotate(-135deg);
     }
@@ -143,6 +153,7 @@ defineExpose({ clearSelection })
     position: absolute;
     right: 7px;
     top: 25%;
+    transition: 200ms;
 
     &:hover {
         color: #000;
@@ -197,6 +208,7 @@ defineExpose({ clearSelection })
     li {
         padding: 10px;
         cursor: pointer;
+        transition: 200ms;
 
         &:hover {
             background-color: #f1f1f1;

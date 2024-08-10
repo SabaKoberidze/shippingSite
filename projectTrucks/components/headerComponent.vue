@@ -86,12 +86,14 @@ header {
     height: 60px;
     justify-content: space-between;
     background-color: rgba(136, 145, 146, 0.539);
+    font-weight: bold;
 
     #siteInfo {
         display: flex;
         gap: 40px;
         align-items: center;
         height: 100%;
+        font-weight: bold;
 
         #logo {
             width: 60px;
@@ -165,7 +167,7 @@ header {
 
                 &:nth-child(2) {
                     border: 0;
-                    max-width: 25%;
+                    max-width: 45px;
                 }
             }
 
@@ -176,8 +178,10 @@ header {
                 top: 100%;
                 right: 0;
                 padding: 0;
-                background-color: rgba(255, 255, 255, 0.903);
-                border-radius: 25px 0 25px 25px;
+                background-color: rgba(255, 255, 255, 0.608);
+                backdrop-filter: blur(5px);
+                border: 0;
+                border-radius: 10px 0 10px 10px;
                 z-index: 5;
                 cursor: unset;
 
@@ -192,15 +196,11 @@ header {
                     border: 0;
                     padding: 0;
                     border-right: 1px solid rgba(0, 0, 0, 0.357);
-                    border-radius: 25px 0 0 20px;
+                    border-radius: 0;
                     overflow: hidden;
                     transition: 200ms;
+                    border-radius: 5px 0 0 5px;
 
-                    &:nth-child(2) {
-                        border: 0;
-                        border-radius: 0 0 20px;
-                        overflow: hidden;
-                    }
 
                     p {
                         display: flex;
@@ -209,24 +209,30 @@ header {
                         width: 100%;
                         min-height: 45px;
                         height: 45px;
-                        transition: 100ms;
+                        transition: 200ms;
 
                         &:hover {
-                            background-color: rgba(0, 0, 255, 0.208);
+                            background-color: rgb(184, 124, 113);
                         }
 
                         &.active {
-                            background-color: rgba(0, 0, 67, 0.446);
+                            background-color: rgb(123, 53, 41);
+                            color: white;
                         }
                     }
 
                     &:nth-child(2) {
+                        border: 0;
+                        border-radius: 0 0 5px 0;
+                        overflow: hidden;
+
                         p {
                             align-items: center;
                             justify-content: center;
                             padding: 0;
                         }
                     }
+
                 }
 
             }
@@ -247,23 +253,27 @@ header {
             align-items: center;
             background-image: url("../assets/images/driver.png");
             background-position: center;
+            background-repeat: no-repeat;
             background-size: cover;
             cursor: pointer;
             position: relative;
-            transition: 200ms;
+            outline: 0px solid rgba(0, 0, 0, 0.278);
+            transition: 100ms;
 
             &.active {
-                border-radius: 25px 25px 0 0;
+                outline: 3px solid rgba(0, 0, 0, 0.274);
             }
 
             div {
                 z-index: 5;
                 position: absolute;
-                width: 100px;
-                background-color: white;
-                top: 100%;
+                width: 120px;
+                background-color: rgba(240, 240, 240, 0.111);
+                backdrop-filter: blur(5px);
+                border: 1px solid rgb(123, 53, 41);
+                top: 120%;
                 right: 0;
-                border-radius: 25px 0 25px 0;
+                border-radius: 5px;
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
@@ -272,11 +282,13 @@ header {
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    height: 30px;
+                    height: 40px;
                     transition: 200ms;
+                    user-select: none;
+                    color: rgba(255, 255, 255, 0.781);
 
                     &:hover {
-                        background-color: rgb(210, 245, 253);
+                        background-color: rgb(123, 53, 41);
                     }
                 }
             }
