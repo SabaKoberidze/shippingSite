@@ -72,7 +72,6 @@ const login = async () => {
     console.log('error', error)
 }
 
-//const user = useSupabaseUser()
 </script>
 
 <style scoped lang="scss">

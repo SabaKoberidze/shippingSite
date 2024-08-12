@@ -43,7 +43,7 @@ const clearFilter = () => {
     justify-content: center;
     align-items: center;
     position: relative;
-    margin-top: 2%;
+    margin-top: 45px;
 
     #filter {
         border-radius: 20px;
