@@ -4,4 +4,5 @@
 
 <template>
     <filterComponent></filterComponent>
+    <ProductViewer></ProductViewer>
 </template>

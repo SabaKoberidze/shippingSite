@@ -24,29 +24,30 @@
         </form>
     </div>
 
-
     <div id="myProducts">
         <ul>
             <li v-for="(product, index) in products" :key="index">
-                {{ product.name }} - {{ product.price }}
+                {{ product.name }} - {{ product.price }}/{{ product.id }}
+                <button @click="deleteProduct(product.id)">Delete</button>
             </li>
         </ul>
     </div>
 </template>
 
-<script lang="ts" setup>
 
+<script lang="ts" setup>
 definePageMeta({
     middleware: ['auth']
 })
 
 interface Product {
+    id: number
     name: string
     price: number
     description: string
 }
-const products = ref<Product[]>([])
 
+const products = ref<Product[]>([])
 
 const formData = ref({
     name: '',
@@ -60,7 +61,7 @@ const toggleForm = () => {
 }
 
 const submitForm = async () => {
-    const product: Product = {
+    const product: Omit<Product, 'id'> = {
         name: formData.value.name,
         price: formData.value.price,
         description: formData.value.description,
@@ -73,15 +74,14 @@ const submitForm = async () => {
                 'Content-Type': 'application/json',
             }
         })
-    }
-    catch (err) {
+        fetchProducts()
+    } catch (err) {
         console.log(err)
     }
     formData.value = { name: '', price: 0, description: '' }
-    fetchProducts()
 }
 
-// products displayed
+// Fetch products to display
 onMounted(async () => {
     fetchProducts()
 })
@@ -91,13 +91,25 @@ const fetchProducts = async () => {
         const updatedProducts: any = await $fetch('/api/fetchUserProducts')
         if (updatedProducts) {
             products.value = updatedProducts.data
+            console.log(products.value)
         }
     } catch (err) {
         console.log(err)
     }
 }
-</script>
 
+// Delete a product
+const deleteProduct = async (productId: number) => {
+    try {
+        await $fetch(`/api/deleteUserProduct/${productId}`, {
+            method: 'DELETE',
+        })
+        fetchProducts() // Refresh the product list after deletion
+    } catch (err) {
+        console.log(err)
+    }
+}
+</script>
 <style lang="scss" scoped>
 .add-product {
     max-width: 400px;
