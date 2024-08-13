@@ -63,9 +63,9 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .product-list {
-    max-width: 600px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 20px;
+    margin-top: 60px;
 
     #myProducts {
         ul {
@@ -74,10 +74,13 @@ onMounted(() => {
 
             li {
                 padding: 15px;
-                background-color: #f9f9f9;
+                width: 100%;
+                height: 160px;
+                background-color: transparent;
+                border: 1px solid white;
                 margin-bottom: 10px;
                 border-radius: 4px;
-                box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+                color: white;
             }
         }
 

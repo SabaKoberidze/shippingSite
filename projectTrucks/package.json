@@ -12,6 +12,8 @@
   "dependencies": {
     "@nuxtjs/supabase": "^1.3.5",
     "@pinia/nuxt": "^0.5.2",
+    "base64-arraybuffer": "^1.0.2",
+    "formidable": "^3.5.1",
     "nuxt": "^3.12.4",
     "pinia": "^2.2.0",
     "vue": "latest"
@@ -21,6 +23,7 @@
     "@supabase/gotrue-js": "2.16.0"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "sass": "^1.77.8"
   }
 }

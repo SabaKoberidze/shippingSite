@@ -1,21 +1,135 @@
-import { serverSupabaseClient } from '#supabase/server'
-import { serverSupabaseUser } from '#supabase/server'
+import { serverSupabaseClient } from '#supabase/server';
+import { serverSupabaseUser } from '#supabase/server';
+import { IncomingForm } from 'formidable';
+import fs from 'fs';
+import path from 'path';
 
 export default defineEventHandler(async (event) => {
-    const client = await serverSupabaseClient(event)
-    const user = await serverSupabaseUser(event)
-    const body = await readBody(event)
-    if(user){
-        body.user_id = user.id
-        try{
-            await client
-            .from('Products')
-            .insert(body)
-        } catch(err){
-            return err
+    const client = await serverSupabaseClient(event);
+    const user = await serverSupabaseUser(event);
+
+    const form = new IncomingForm();
+
+    // Wrap form.parse in a Promise
+    const parseForm = () =>
+        new Promise<{ fields: any; files: any }>((resolve, reject) => {
+            form.parse(event.node.req, (err, fields, files) => {
+                if (err) return reject(err);
+                resolve({ fields, files });
+            });
+        });
+
+    try {
+        const { fields, files } = await parseForm();
+
+        if (!user) {
+            throw new Error('User not found');
         }
+
+        const name = fields.name ? fields.name[0] : '';
+        const price = fields.price ? parseFloat(fields.price[0]) : 0;
+        const description = fields.description ? fields.description[0] : '';
+
+        if (!name || !description || isNaN(price)) {
+            throw new Error('Invalid input data');
+        }
+
+        const productData = {
+            name,
+            price,
+            description,
+            user_id: user.id
+        };
+
+        const { data, error } = await client
+            .from('Products')
+            .insert(productData)
+            .select();
+
+        if (error) {
+            throw new Error('Error inserting the data');
+        }
+
+        const productId = data && data.length ? data[0].id : null;
+        if (!productId) {
+            throw new Error('Failed to retrieve product ID');
+        }
+
+        const imageUrls = [];
+
+        for (const fileKey in files) {
+            const fileArray = files[fileKey];
+            const fileList = Array.isArray(fileArray) ? fileArray : [fileArray];
+
+            for (const file of fileList) {
+                const filePath = file.filepath;
+                try {
+                    const publicURL = await uploadFile(filePath, productId, client);
+                    if (publicURL) {
+                        imageUrls.push(publicURL);
+                    }
+                } catch (uploadError) {
+                    console.error('Error uploading file:', uploadError);
+                }
+            }
+        }
+
+        // Update the product with image URLs
+        const { error: updateError } = await client
+            .from('Products')
+            .update({ image_urls: imageUrls })
+            .eq('id', productId)
+            .select();
+
+        if (updateError) {
+            console.error('Error updating product with image URLs:', updateError);
+            throw new Error(updateError.message);
+        }
+
+        return {
+            success: true,
+        };
+
+    } catch (error) {
+        console.error('Error:', error);
+        return {
+            success: false,
+            error: error
+        };
     }
-    else{
-        return 'user not found'
+});
+
+const uploadFile = async (filePath: string, productId: any, client: any) => {
+    const fileName = path.basename(filePath);
+    const fileBuffer = fs.readFileSync(filePath);
+
+    try {
+        const { data, error } = await client.storage
+            .from('product-images')
+            .upload(`products/${productId}/${fileName}`, fileBuffer, {
+                cacheControl: '3600',
+                upsert: false,
+                contentType: 'image/jpeg',
+            });
+
+        if (error) {
+            console.error('Upload error:', error);
+            throw new Error(error.message);
+        }
+
+        const res = await client.storage
+            .from('product-images')
+            .getPublicUrl(`products/${productId}/${fileName}`);
+
+        if (res.error) {
+            console.error('Error getting public URL:', res.error);
+            throw new Error(res.error.message);
+        }
+
+        return res.data.publicUrl;
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        throw error;
     }
-  })
+};
+

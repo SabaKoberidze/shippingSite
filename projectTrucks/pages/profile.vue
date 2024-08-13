@@ -20,6 +20,11 @@
                 <textarea id="description" v-model="formData.description" required></textarea>
             </div>
 
+            <div class="form-group">
+                <label for="files">Select files:</label>
+                <input type="file" id="files" name="files" multiple @change="handleFileChange">
+            </div>
+
             <button type="submit" class="submit-btn">Add Product</button>
         </form>
     </div>
@@ -27,13 +32,19 @@
     <div id="myProducts">
         <ul>
             <li v-for="(product, index) in products" :key="index">
+                <div class="productImages">
+                    <img v-for="image in product.image_urls" :src="image">
+                </div>
+
                 {{ product.name }} - {{ product.price }}/{{ product.id }}
+
+
                 <button @click="deleteProduct(product.id)">Delete</button>
+
             </li>
         </ul>
     </div>
 </template>
-
 
 <script lang="ts" setup>
 definePageMeta({
@@ -45,6 +56,7 @@ interface Product {
     name: string
     price: number
     description: string
+    image_urls?: string[]
 }
 
 const products = ref<Product[]>([])
@@ -54,32 +66,51 @@ const formData = ref({
     price: 0,
     description: '',
 })
+
+const files = ref<File[]>([]) // Add a ref for files
 const showForm = ref(false)
 
 const toggleForm = () => {
     showForm.value = !showForm.value
 }
 
-const submitForm = async () => {
-    const product: Omit<Product, 'id'> = {
-        name: formData.value.name,
-        price: formData.value.price,
-        description: formData.value.description,
+const handleFileChange = (event: Event) => {
+    const target = event.target as HTMLInputElement
+    if (target.files) {
+        files.value = Array.from(target.files)
     }
-    try {
-        await $fetch('/api/addUserProducts', {
-            method: 'POST',
-            body: JSON.stringify(product),
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-        fetchProducts()
-    } catch (err) {
-        console.log(err)
-    }
-    formData.value = { name: '', price: 0, description: '' }
 }
+
+const submitForm = async () => {
+    const form = new FormData();
+    form.append('name', formData.value.name);
+    form.append('price', formData.value.price.toString());
+    form.append('description', formData.value.description);
+
+    for (const file of files.value) {
+        form.append('files', file);
+    }
+
+    try {
+        const response = await fetch('/api/addUserProducts', {
+            method: 'POST',
+            body: form,
+        });
+
+        // Check for errors or successful submission
+        if (response.ok) {
+            fetchProducts();
+        } else {
+            console.error('Failed to submit the form');
+        }
+    } catch (err) {
+        console.error('Error:', err);
+    }
+
+    // Clear the form after submission
+    formData.value = { name: '', price: 0, description: '' };
+    files.value = [];
+};
 
 // Fetch products to display
 onMounted(async () => {
@@ -194,6 +225,17 @@ const deleteProduct = async (productId: number) => {
         li {
             padding: 20px;
             background-color: white;
+            height: 120px;
+            display: flex;
+            justify-content: space-between;
+
+            .productImages {
+                height: 100%;
+
+                img {
+                    height: 100%;
+                }
+            }
         }
     }
 }
