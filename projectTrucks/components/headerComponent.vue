@@ -2,7 +2,7 @@
     <header>
         <div id="siteInfo">
             <div id="logo" @click="navigateTo('/')">LOGO</div>
-            <div id="searchContainer" v-show="route.name !== 'profile'">
+            <div id="searchContainer">
                 <div id="searchIcon">
                 </div>
                 <input placeholder="ძებნა">
@@ -83,9 +83,10 @@ header {
     display: flex;
     align-items: center;
     width: 100%;
-    height: 60px;
+    height: 70px;
     justify-content: space-between;
-    background-color: rgba(136, 145, 146, 0.539);
+    background-color: rgba(158, 158, 158, 0);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.334);
     font-weight: bold;
 
     #siteInfo {
@@ -101,6 +102,7 @@ header {
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            color: white;
         }
 
         #searchContainer {
@@ -144,13 +146,15 @@ header {
 
         #siteConfigs {
             display: flex;
-            background-color: rgba(255, 255, 255, 0.903);
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.659);
             justify-content: space-evenly;
             align-items: center;
             height: 60%;
             min-width: 150px;
             position: relative;
-            border-radius: 25px;
+            border-radius: 15px;
             transition: 200ms;
             user-select: none;
 
@@ -162,7 +166,7 @@ header {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                border-right: solid 1px rgba(0, 0, 0, 0.357);
+                border-right: solid 1px rgba(255, 255, 255, 0.357);
                 padding: 0 10px;
 
                 &:nth-child(2) {
@@ -175,15 +179,18 @@ header {
                 position: absolute;
                 min-width: 250px;
                 height: max-content;
-                top: 100%;
+                top: 120%;
                 right: 0;
                 padding: 0;
-                background-color: rgba(255, 255, 255, 0.608);
+                background-color: rgba(240, 240, 240, 0.111);
                 backdrop-filter: blur(5px);
                 border: 0;
-                border-radius: 10px 0 10px 10px;
+                border-radius: 10px;
                 z-index: 5;
-                cursor: unset;
+                color: white;
+                border: 1px solid rgb(123, 53, 41);
+
+                overflow: hidden;
 
                 div {
                     cursor: pointer;
@@ -195,11 +202,9 @@ header {
                     align-items: start;
                     border: 0;
                     padding: 0;
-                    border-right: 1px solid rgba(0, 0, 0, 0.357);
                     border-radius: 0;
                     overflow: hidden;
                     transition: 200ms;
-                    border-radius: 5px 0 0 5px;
 
 
                     p {
@@ -223,7 +228,6 @@ header {
 
                     &:nth-child(2) {
                         border: 0;
-                        border-radius: 0 0 5px 0;
                         overflow: hidden;
 
                         p {
@@ -236,11 +240,6 @@ header {
                 }
 
             }
-
-            &.active {
-                border-radius: 25px 25px 0 0;
-            }
-
         }
 
         #userPorfile {

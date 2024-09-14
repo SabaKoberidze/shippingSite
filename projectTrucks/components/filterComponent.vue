@@ -16,7 +16,6 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
 
 const dropdownOptions = [
     { name: 'პირველი', options: ['ერთი', 'ორი', 'სამი'] },
@@ -49,7 +48,8 @@ const clearFilter = () => {
         border-radius: 20px;
         height: 100%;
         width: 1000px;
-        background-color: rgba(255, 255, 255, 0.159);
+        background-color: rgba(65, 62, 62, 0.197);
+        border: 1px solid rgb(123, 53, 41);
         position: relative;
 
         .filterConfigs {
@@ -57,7 +57,7 @@ const clearFilter = () => {
             justify-content: end;
             align-items: center;
             height: 50px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.446);
+            border-bottom: 1px solid rgb(123, 53, 41);
             color: rgba(255, 255, 255, 0.566);
             padding: 0 30px;
 

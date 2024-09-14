@@ -22,7 +22,6 @@
 
 <script lang="ts" setup>
 import { ref, computed, nextTick, defineProps } from 'vue';
-
 const props = defineProps({
     options: {
         type: Array as () => string[],
@@ -100,7 +99,8 @@ defineExpose({ clearSelection })
 
 .dropdown-button {
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: #f9f9f903;
+    color: white;
     padding: 10px;
     cursor: pointer;
     width: 100%;
@@ -109,11 +109,12 @@ defineExpose({ clearSelection })
     align-items: start;
     flex-direction: column;
     height: 40px;
-    border: 0;
+    border: 1px solid rgb(153, 93, 82);
     transition: 200ms;
+    z-index: 100;
 
     &.selected {
-        background-color: rgb(143, 143, 143);
+        background-color: rgb(40, 39, 39);
     }
 
     .dropdown-name {
@@ -123,7 +124,7 @@ defineExpose({ clearSelection })
 }
 
 .arrow {
-    border: solid black;
+    border: solid white;
     border-width: 0 2px 2px 0;
     display: inline-block;
     padding: 3px;
@@ -156,7 +157,7 @@ defineExpose({ clearSelection })
     transition: 200ms;
 
     &:hover {
-        color: #000;
+        color: #ffffff;
     }
 }
 
@@ -193,7 +194,8 @@ defineExpose({ clearSelection })
     transform: scaleY(0);
     transform-origin: top;
     transition: opacity 0.3s ease, transform 0.3s ease;
-    z-index: 5;
+    z-index: 100;
+    border-radius: 0 0 5px 5px;
 
     &-open {
         opacity: 1;

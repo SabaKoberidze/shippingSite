@@ -34,7 +34,7 @@ export default defineEventHandler(async (event) => {
             throw new Error('Invalid input data');
         }
 
-        const productData = {
+        const productData:any = {
             name,
             price,
             description,
@@ -49,13 +49,13 @@ export default defineEventHandler(async (event) => {
         if (error) {
             throw new Error('Error inserting the data');
         }
-
-        const productId = data && data.length ? data[0].id : null;
+        const product: {id: number} = data[0]
+        const productId = data && data.length ? product.id : null;
         if (!productId) {
             throw new Error('Failed to retrieve product ID');
         }
 
-        const imageUrls = [];
+        const imageUrls: string[] = [];
 
         for (const fileKey in files) {
             const fileArray = files[fileKey];
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
             for (const file of fileList) {
                 const filePath = file.filepath;
                 try {
-                    const publicURL = await uploadFile(filePath, productId, client);
+                    const publicURL = await uploadFile(filePath, productId, client, user);
                     if (publicURL) {
                         imageUrls.push(publicURL);
                     }
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
         // Update the product with image URLs
         const { error: updateError } = await client
             .from('Products')
-            .update({ image_urls: imageUrls })
+            .update({ image_urls: imageUrls } as never)
             .eq('id', productId)
             .select();
 
@@ -99,7 +99,7 @@ export default defineEventHandler(async (event) => {
     }
 });
 
-const uploadFile = async (filePath: string, productId: any, client: any) => {
+const uploadFile = async (filePath: string, productId: any, client: any, user:any) => {
     const fileName = path.basename(filePath);
     const fileBuffer = fs.readFileSync(filePath);
 
@@ -116,15 +116,17 @@ const uploadFile = async (filePath: string, productId: any, client: any) => {
             console.error('Upload error:', error);
             throw new Error(error.message);
         }
-
+        const fileStoragePath = `products/${productId}/${fileName}`
         const res = await client.storage
             .from('product-images')
-            .getPublicUrl(`products/${productId}/${fileName}`);
+            .getPublicUrl(fileStoragePath);
 
         if (res.error) {
             console.error('Error getting public URL:', res.error);
             throw new Error(res.error.message);
         }
+
+        addMetaData(fileStoragePath, client, user)
 
         return res.data.publicUrl;
     } catch (error) {
@@ -132,4 +134,16 @@ const uploadFile = async (filePath: string, productId: any, client: any) => {
         throw error;
     }
 };
+async function addMetaData(fileStoragePath:string, client:any, user: any) {
+    const metadata = {
+        user_id: user.id,
+        file_path: fileStoragePath
+    }
+    const { data, error } = await client
+        .from('file_metadata')
+        .insert(metadata)               
+        .select()
+    console.log(data)
+    console.log(error)
+}
 

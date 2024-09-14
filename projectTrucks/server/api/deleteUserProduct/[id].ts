@@ -1,17 +1,21 @@
 import { H3Event } from 'h3';
-import { serverSupabaseClient } from '#supabase/server';
+import { serverSupabaseClient, serverSupabaseUser } from '#supabase/server';
 
 export default defineEventHandler(async (event: H3Event) => {
     const client = await serverSupabaseClient(event);
-
+    const bucketName = 'product-images';
     const productId = event.context.params?.id as string | undefined;
+    const user = await serverSupabaseUser(event);
+
+    if (!user) {
+        return { error: 'User not authenticated' };
+    }
 
     if (!productId) {
         return { error: 'Product ID is required' };
     }
 
     try {
-        // Step 1: Retrieve image URLs before deletion
         const { data: product, error: fetchError } = await client
             .from('Products')
             .select('image_urls')
@@ -19,38 +23,62 @@ export default defineEventHandler(async (event: H3Event) => {
             .single();
 
         if (fetchError) throw fetchError;
+        if (product && Array.isArray(product.image_urls)) {
+            const urls: string[] = product.image_urls;
 
-        // Step 2: Delete images from storage
-        if (product && product.image_urls) {
-            for (const imageUrl of product.image_urls) {
-                const filePath = imageUrl.replace(`${process.env.SUPABASE_URL}/storage/v1/object/public/`, '');
-                const { error: deleteImageError } = await client
+            for (const url of urls) {
+                const startIndex = url.indexOf('product-images/') + 'product-images/'.length;
+                const filePath = url.substring(startIndex);
+
+                // Verify the user has permission to delete this file
+                const { data: metadata, error: metaError } = await client
+                    .from('file_metadata')
+                    .select('*')
+                    .eq('file_path', filePath)
+                    .eq('user_id', user.id)
+                    .single();
+                if (metaError || !metadata) {
+                    console.error('Permission denied or file not found:', metaError);
+                    continue;
+                }
+
+                // Delete the file from the storage
+                const { data, error: deleteError } = await client
                     .storage
-                    .from('product-images')
+                    .from(bucketName)
                     .remove([filePath]);
 
-                if (deleteImageError) {
-                    console.error('Error deleting image:', deleteImageError);
-                    throw deleteImageError;
+                if (deleteError) {
+                    console.error('Error deleting file:', deleteError);
+                } else {
+                    console.log('Deleted file:', filePath);
+                    // Delete the corresponding metadata
+                    const { error: metaDeleteError } = await client
+                        .from('file_metadata')
+                        .delete()
+                        .eq('file_path', filePath)
+                        .eq('user_id', user.id);
+
+                    if (metaDeleteError) {
+                        console.error('Error deleting metadata:', metaDeleteError);
+                    } else {
+                        console.log('Deleted metadata for file:', filePath);
+                    }
                 }
             }
+        } else {
+            console.log('No image URLs found or image_urls is not an array.');
         }
 
-        // Step 3: Delete the product from the database
-        const { error: deleteError } = await client
+        const { error: deleteProductError } = await client
             .from('Products')
             .delete()
             .eq('id', productId);
 
-        if (deleteError) throw deleteError;
-
+        if (deleteProductError) throw deleteProductError;
         return { success: true };
-    } catch (err: unknown) {
-        if (err instanceof Error) {
-            return { error: err.message };
-        } else {
-            return { error: 'An unexpected error occurred' };
-        }
+    } catch (err) {
+        console.error('Error:', err);
+        return { error: 'An error occurred during deletion' };
     }
 });
-//todo

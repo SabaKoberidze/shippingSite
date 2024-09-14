@@ -1,6 +1,5 @@
 <template>
     <div id="loginPageContainer">
-
         <div id="loginPage">
             <form @submit.prevent="() => (isSignUp ? signUp() : login())">
                 <div id="inputsContaiener">
@@ -65,11 +64,10 @@ const login = async () => {
         email: email.value,
         password: password.value
     })
+
     if (data.user) {
         navigateTo('/profile')
     }
-    console.log('user', data)
-    console.log('error', error)
 }
 
 </script>
