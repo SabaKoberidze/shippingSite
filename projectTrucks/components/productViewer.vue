@@ -84,7 +84,7 @@ const fetchProducts = async () => {
     try {
         let url
         if (props.viewerType === Enums.typeOfProduct.global) {
-            url = `/api/fetchAllProducts?page=${page.value}&limit=${limit}`
+            url = `/api/fetchProducts?page=${page.value}&limit=${limit}`
         }
         else {
             url = '/api/fetchUserProducts'
