@@ -294,5 +294,14 @@ header {
         }
 
     }
+
+    @media (max-width: 700px) {
+        #siteInfo {
+            #searchContainer {
+                display: none;
+            }
+        }
+
+    }
 }
 </style>

@@ -8,7 +8,9 @@
                 </div>
                 <div class="productInfo">
                     <p class="name"> {{ product.name }}</p>
-                    <p class="price">Price: {{ product.price }} {{ langCur.activeCurrency }}</p>
+                    <p class="price">Price: {{ product.price }} {{ langCur.activeCurrency }} - {{ product.forSale ?
+                        'იყიდება' : 'ქირავდება' }}
+                    </p>
                     <p class="description">{{ product.description }}</p>
                 </div>
                 <button v-if="props.viewerType === Enums.typeOfProduct.user"
@@ -48,6 +50,7 @@ interface Product {
     name: string
     price: number
     description: string
+    forSale: string
     image_urls: string[]
 }
 
@@ -248,6 +251,10 @@ defineExpose({ fetchProducts })
             display: flex;
             justify-content: space-between;
             position: relative;
+
+            @media (max-width: 1000px) {
+                width: 95vw;
+            }
 
             button {
                 background-color: transparent;

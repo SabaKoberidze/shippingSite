@@ -25,6 +25,17 @@
                 <input type="file" id="files" name="files" multiple @change="handleFileChange">
             </div>
 
+            <div class="form-group">
+                <label>Purchase Type:</label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="purchaseType" v-model="formData.forSale" />
+                    <label for="purchaseType">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="purchase-label">{{ formData.forSale ? 'გაყიდვა' : 'გაქირავება' }}</span>
+                </div>
+            </div>
+
             <button type="submit" class="submit-btn">Add Product</button>
         </form>
     </div>
@@ -53,7 +64,9 @@ const formData = ref({
     name: '',
     price: 0,
     description: '',
-})
+    forSale: false, // false for rent, true for purchase
+});
+
 
 const files = ref<File[]>([])
 const showForm = ref(false)
@@ -74,6 +87,7 @@ const submitForm = async () => {
     form.append('name', formData.value.name);
     form.append('price', formData.value.price.toString());
     form.append('description', formData.value.description);
+    form.append('forSale', formData.value.forSale.toString());
 
     for (const file of files.value) {
         form.append('files', file);
@@ -96,7 +110,7 @@ const submitForm = async () => {
     }
 
     // Clear the form after submission
-    formData.value = { name: '', price: 0, description: '' };
+    formData.value = { name: '', price: 0, description: '', forSale: false };
     files.value = [];
 };
 
@@ -222,7 +236,7 @@ const submitForm = async () => {
         transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
 
         &.formShown {
-            max-height: 500px;
+            max-height: 600px;
         }
     }
 
@@ -377,6 +391,62 @@ const submitForm = async () => {
                 }
             }
         }
+    }
+}
+
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    display: flex;
+
+
+    input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    label {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(123, 53, 41, 0.39);
+        transition: 0.4s;
+        border-radius: 34px;
+    }
+
+    label:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 4px;
+        bottom: 50%;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+        transform: translateY(50%);
+    }
+
+    input:checked+label {
+        background-color: rgba(123, 53, 41, 0.701);
+    }
+
+    input:checked+label:before {
+        transform: translateY(50%) translateX(160%);
+    }
+
+    .purchase-label {
+        margin-left: 60px;
+        margin-top: 6px;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.677);
     }
 }
 </style>

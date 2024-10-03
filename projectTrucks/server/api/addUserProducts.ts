@@ -29,7 +29,8 @@ export default defineEventHandler(async (event) => {
         const name = fields.name ? fields.name[0] : '';
         const price = fields.price ? parseFloat(fields.price[0]) : 0;
         const description = fields.description ? fields.description[0] : '';
-
+        const forSale = fields.forSale ? fields.forSale == 'true' : false
+        console.log(forSale)
         if (!name || !description || isNaN(price)) {
             throw new Error('Invalid input data');
         }
@@ -38,7 +39,8 @@ export default defineEventHandler(async (event) => {
             name,
             price,
             description,
-            user_id: user.id
+            user_id: user.id,
+            forSale
         };
 
         const { data, error } = await client
